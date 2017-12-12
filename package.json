@@ -35,5 +35,20 @@
     "testMatch": [
       "<rootDir>/__tests__/**/*.js"
     ]
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/chasingmaxwell/lambda-patterns.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chasingmaxwell/lambda-patterns/issues"
+  },
+  "homepage": "https://github.com/chasingmaxwell/lambda-patterns#readme",
+  "directories": {
+    "lib": "lib"
+  },
+  "keywords": [
+    "lambda",
+    "aws"
+  ]
 }

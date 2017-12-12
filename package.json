@@ -1,6 +1,6 @@
 {
   "name": "lambda-patterns",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A set of abstractions and helpers for working with lambdas.",
   "main": "index.js",
   "author": "Peter Sieg <chasingmaxwell@gmail.com>",

@@ -84,7 +84,7 @@ module.exports = {
 
 ## Documentation
 
-See the [DOCUMENTATION.md](./documentation) file.
+See the [DOCUMENTATION.md](./DOCUMENTATION.md) file.
 
 ## Contributors
 

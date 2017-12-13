@@ -29,9 +29,11 @@
 
 ### Handler
 
+The `Handler` class facilitates common patterns in lambda handlers through some useful abstractions. For example, it processes events through a standard flow (`init` -> `process` -> `cleanup` -> `respond`) which allows you to alter and extend behavior in a repeatable way across multiple handlers. It also includes optional [profiling functionality](#enable-profiling) out-of-the-box!
+
 #### Simple Usage
 
-The `Handler` class provides some useful abstractions facilitating common patterns in lambda handlers. To start with, let's just look at the simplest example:
+To start with, let's just look at the simplest example:
 
 ```javascript
 // ./handler.js

@@ -8,10 +8,17 @@
   "scripts": {
     "test": "jest --coverage",
     "lint": "eslint --ignore-path .gitignore .",
-    "precommit": "yarn lint",
+    "emdaer": "emdaer && git add *.md",
+    "precommit": "yarn lint && yarn emdaer",
     "prepush": "yarn test"
   },
   "devDependencies": {
+    "@emdaer/cli": "^1.8.1",
+    "@emdaer/plugin-contributors-details-github": "^1.8.1",
+    "@emdaer/plugin-documentation": "^1.8.1",
+    "@emdaer/plugin-license-reference": "^1.8.1",
+    "@emdaer/plugin-shields": "^1.8.1",
+    "@emdaer/plugin-value-from-package": "^1.8.1",
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",

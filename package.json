@@ -10,20 +10,27 @@
     "lint": "eslint --ignore-path .gitignore .",
     "emdaer": "emdaer && git add *.md",
     "precommit": "yarn lint && yarn emdaer",
-    "prepush": "yarn test"
+    "prepush": "yarn test",
+    "commitmsg": "commitlint -e $GIT_PARAMS",
+    "semantic-release": "semantic-release pre && semantic-release post"
   },
   "devDependencies": {
+    "@commitlint/cli": "^5.2.5",
+    "@commitlint/config-conventional": "^5.2.3",
     "@emdaer/cli": "^1.8.1",
     "@emdaer/plugin-contributors-details-github": "^1.8.1",
     "@emdaer/plugin-documentation": "^1.8.1",
     "@emdaer/plugin-license-reference": "^1.8.1",
     "@emdaer/plugin-shields": "^1.8.1",
     "@emdaer/plugin-value-from-package": "^1.8.1",
+    "condition-noop": "^1.0.0",
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.8.0",
     "husky": "^0.14.3",
-    "jest": "^21.2.1"
+    "jest": "^21.2.1",
+    "semantic-release": "^8.2.0",
+    "semantic-release-conventional-commits": "^1.2.0"
   },
   "dependencies": {
     "v8-profiler-lambda": "iopipe/v8-profiler-lambda"
@@ -56,6 +63,11 @@
   },
   "keywords": [
     "lambda",
-    "aws"
-  ]
+    "aws",
+    "serverless"
+  ],
+  "release": {
+    "analyzeCommits": "semantic-release-conventional-commits",
+    "verifyConditions": "condition-noop"
+  }
 }

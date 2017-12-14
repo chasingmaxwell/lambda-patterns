@@ -1,0 +1,28 @@
+language: node_js
+cache:
+  directories:
+    - node_modules
+
+stages:
+  - name: test
+    # require the event type to not be a semantic release tag.
+    if: NOT tag =~ ^v\d+\.\d+\.\d+$
+  - name: deploy
+    if: branch = master AND fork = false AND type IN (push, api)
+
+jobs:
+  include:
+    -
+      stage: test
+      node_js: 'lts/boron'
+
+    -
+      stage: test
+      node_js: 'lts/carbon'
+    -
+      stage: release
+      # Semantic release will fail if it's not using node 8.
+      node_js: 'lts/carbon'
+      before_install:
+        - git fetch --tags
+      script: yarn semantic-release

@@ -4,11 +4,22 @@
   Its template can be found at .emdaer/README.emdaer.md
 -->
 
-# lambda-patterns · [![Documented with emdaer](https://img.shields.io/badge/📓-documented%20with%20emdaer-F06632.svg?style=flat-square)](https://github.com/emdaer/emdaer)
+# lambda-patterns · [![Travis](https://img.shields.io/travis/chasingmaxwell/lambda-patterns.svg?branch=master?style=plastic)](https://travis-ci.org/chasingmaxwell/lambda-patterns) [![Documented with emdaer](https://img.shields.io/badge/📓-documented%20with%20emdaer-F06632.svg?style=flat-square)](https://github.com/emdaer/emdaer)
 
 A set of abstractions and helpers for working with lambdas.
 
 <!-- toc -->
+
+- [Installation](#installation)
+- [Usage](#usage)
+  * [Handler](#handler)
+    + [Simple Usage](#simple-usage)
+    + [Enable profiling](#enable-profiling)
+- [Documentation](#documentation)
+- [Contributors](#contributors)
+- [License](#license)
+
+<!-- tocstop -->
 
 ## Installation
 
@@ -95,3 +106,5 @@ See the [DOCUMENTATION.md](./DOCUMENTATION.md) file.
 ## License
 
 lambda-patterns is [MIT licensed](./LICENSE).
+
+

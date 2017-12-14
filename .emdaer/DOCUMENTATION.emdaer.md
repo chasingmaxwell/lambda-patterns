@@ -7,3 +7,7 @@
   - sources:
     - ./index.js
 -->
+
+<!--emdaer-t
+  - '@emdaer/transform-table-of-contents'
+-->

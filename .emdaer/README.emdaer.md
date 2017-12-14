@@ -4,6 +4,9 @@
 --> · <!--emdaer-p
   - '@emdaer/plugin-shields'
   - shields:
+      - alt: 'Travis'
+        image: 'travis/chasingmaxwell/lambda-patterns.svg?branch=master'
+        link: 'https://travis-ci.org/chasingmaxwell/lambda-patterns'
       - alt: 'Documented with emdaer'
         image: 'badge/📓-documented%20with%20emdaer-F06632.svg'
         link: 'https://github.com/emdaer/emdaer'
@@ -98,4 +101,8 @@ See the [DOCUMENTATION.md](./DOCUMENTATION.md) file.
 
 <!--emdaer-p
   - '@emdaer/plugin-license-reference'
+-->
+
+<!--emdaer-t
+  - '@emdaer/transform-table-of-contents'
 -->

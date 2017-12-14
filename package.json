@@ -23,6 +23,7 @@
     "@emdaer/plugin-license-reference": "^1.8.1",
     "@emdaer/plugin-shields": "^1.8.1",
     "@emdaer/plugin-value-from-package": "^1.8.1",
+    "@emdaer/transform-table-of-contents": "^1.8.1",
     "condition-noop": "^1.0.0",
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",

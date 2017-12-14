@@ -7,7 +7,7 @@ stages:
   - name: test
     # require the event type to not be a semantic release tag.
     if: NOT tag =~ ^v\d+\.\d+\.\d+$
-  - name: deploy
+  - name: release
     if: branch = master AND fork = false AND type IN (push, api)
 
 jobs:

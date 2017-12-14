@@ -12,7 +12,7 @@
     "precommit": "yarn lint && yarn emdaer",
     "prepush": "yarn test",
     "commitmsg": "commitlint -e $GIT_PARAMS",
-    "semantic-release": "semantic-release pre && semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "devDependencies": {
     "@commitlint/cli": "^5.2.5",

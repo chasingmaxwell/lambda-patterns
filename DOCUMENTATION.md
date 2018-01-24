@@ -15,6 +15,10 @@
   * [process](#process)
   * [cleanup](#cleanup)
   * [respond](#respond)
+  * [startProfiling](#startprofiling)
+  * [stopProfiling](#stopprofiling)
+  * [always](#always)
+  * [never](#never)
   * [defaultOptions](#defaultoptions)
   * [create](#create)
 
@@ -39,7 +43,7 @@ Constructs a handler.
 
 -   `processor` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A function responsible for processing the handler event.
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing options which modify the behavior of the handler. (optional, default `{}`)
-    -   `options.enableProfiling` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** See Handler.create for detailed description. (optional, default `false`)
+    -   `options.shouldProfile` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** See Handler.create for detailed description. (optional, default `Handler.never`)
     -   `options.waitForEventLoop` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** See Handler.create for detailed description. (optional, default `true`)
 
 ### invoke
@@ -79,6 +83,28 @@ Handle the response.
 -   `error` **[Error](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Error)** The error passed from the handler process.
 -   `response` **any** The response from the handler process.
 
+### startProfiling
+
+Start profiling.
+
+### stopProfiling
+
+Stop profiling.
+
+### always
+
+A utility method which always returns true.
+
+Returns **any** Boolean
+  Always returns true.
+
+### never
+
+A utility method which always returns false.
+
+Returns **any** Boolean
+  Always returns false.
+
 ### defaultOptions
 
 ### create
@@ -90,11 +116,13 @@ This can be used when defining the handler like this:
 
 **Parameters**
 
--   `processor` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A function responsible for processing the handler event.
+-   `processor` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A function responsible for processing the primary task of the lambda. It
+      receives the handler instance as an argument.
 -   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing options which modify the behavior of the handler. (optional, default `{}`)
-    -   `options.enableProfiling` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Specify whether profiling data should be collected for the handler
-          invocation.  WARNING: Enabling profiling will impact performance. You should usually
-          not enable this feature on production. (optional, default `false`)
+    -   `options.shouldProfile` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Provide a function which specifies whether profiling data should be
+          collected for the handler invocation. Defaults to Handler.never which
+          always returns false.  WARNING: Enabling profiling will impact performance. You should usually
+          not enable this feature on production. (optional, default `Handler.never`)
     -   `options.waitForEventLoop` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Specify whether the lambda process should be frozen immediately upon
           callback invocation.  WARNING: Changing this option can result in unexpected behavior and bugs
           that are difficult to track down. Only set this to false if you are

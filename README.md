@@ -14,6 +14,7 @@ A set of abstractions and helpers for working with lambdas.
 - [Usage](#usage)
   * [Handler](#handler)
     + [Simple Usage](#simple-usage)
+    + [Cold start detection](#cold-start-detection)
     + [Enable profiling](#enable-profiling)
 - [Documentation](#documentation)
 - [Contributors](#contributors)
@@ -45,7 +46,7 @@ To start with, let's just look at the simplest example:
 const { Handler } = require('lambda-patterns');
 
 module.exports = {
-  yourHandler: Handler.create(event => ({
+  yourHandler: Handler.create({ event } => ({
     statusCode: 200,
     body: JSON.stringify({
       message: 'This handler was created with lambda-patterns!',
@@ -54,6 +55,33 @@ module.exports = {
   })),
 };
 ```
+
+#### Cold start detection
+
+Cold starts are detected with each invocation by taking advantage of the shared require cache between lambda invocations in the same container. The detection takes place in the `init()` step. The result is stored in the `isColdStart` boolean property on the handler. This allows you to alter behavior for cold starts only. For example, you might want to enable profiling only for cold starts or log a message to better understand the impact of cold starts to your application.
+
+```javascript
+// ./handler.js
+
+const { Handler } = require('lambda-patterns');
+
+module.exports = {
+  yourHandler: Handler.create(handler => {
+    if (handler.isColdStart) {
+      console.log('Cold start!');
+    }
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({
+        message: 'This handler was created with lambda-patterns!',
+        input: handler.event,
+      }),
+    }
+  }),
+};
+```
+
 
 #### Enable profiling
 
@@ -76,14 +104,19 @@ class MyHandler extends Handler {
 
 module.exports = {
   yourHandler: MyHandler.create(
-    event => ({
+    { event } => ({
       statusCode: 200,
       body: JSON.stringify({
         message: 'This handler was created with lambda-patterns!',
         input: event,
       }),
     }),
-    { enableProfiling: true }
+    // shouldProfile is a function which receives the handler instance as its
+    // only argument and returns either true or false to indicate whether
+    // profiling data should be collected for the invocation. By default,
+    // profiling is always disabled. In this example we are using the handler's
+    // cold start detection to enable profiling only for cold starts.
+    { shouldProfile: handler => handler.isColdStart }
   ),
 };
 ```

@@ -46,7 +46,7 @@ To start with, let's just look at the simplest example:
 const { Handler } = require('lambda-patterns');
 
 module.exports = {
-  yourHandler: Handler.create({ event } => ({
+  yourHandler: Handler.create(({ event }) => ({
     statusCode: 200,
     body: JSON.stringify({
       message: 'This handler was created with lambda-patterns!',
@@ -104,7 +104,7 @@ class MyHandler extends Handler {
 
 module.exports = {
   yourHandler: MyHandler.create(
-    { event } => ({
+    ({ event }) => ({
       statusCode: 200,
       body: JSON.stringify({
         message: 'This handler was created with lambda-patterns!',

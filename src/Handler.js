@@ -1,3 +1,5 @@
+// @flow
+
 let isColdStart = true;
 
 /**
@@ -18,7 +20,7 @@ class Handler {
    * A utility method which always returns false.
    *
    * @returns Boolean
-   *   Always returns false.
+   *   Always returns .
    */
   static never() {
     return false;

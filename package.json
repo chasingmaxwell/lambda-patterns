@@ -2,7 +2,7 @@
   "name": "lambda-patterns",
   "version": "0.0.0-development",
   "description": "A set of abstractions and helpers for working with lambdas.",
-  "main": "index.js",
+  "main": "lib/index.js",
   "author": "Peter Sieg <chasingmaxwell@gmail.com>",
   "license": "MIT",
   "scripts": {
@@ -12,7 +12,10 @@
     "precommit": "yarn lint && yarn emdaer",
     "prepush": "yarn test",
     "commitmsg": "commitlint -e $GIT_PARAMS",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "prepare": "yarn build",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "flow": "flow",
+    "build": "flow-remove-types src/ --out-dir lib/ && flow-copy-source src lib"
   },
   "devDependencies": {
     "@commitlint/cli": "^5.2.5",
@@ -24,10 +27,15 @@
     "@emdaer/plugin-shields": "^1.8.1",
     "@emdaer/plugin-value-from-package": "^1.8.1",
     "@emdaer/transform-table-of-contents": "^1.8.1",
+    "babel-eslint": "^8.2.2",
     "condition-noop": "^1.0.0",
     "eslint": "^4.13.1",
     "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-flowtype": "^2.46.1",
     "eslint-plugin-import": "^2.8.0",
+    "flow-bin": "^0.66.0",
+    "flow-copy-source": "^1.3.0",
+    "flow-remove-types": "^1.2.3",
     "husky": "^0.14.3",
     "jest": "^21.2.1",
     "semantic-release": "^8.2.0",

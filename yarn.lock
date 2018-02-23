@@ -2522,6 +2522,10 @@ flatmap@0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/flatmap/-/flatmap-0.0.3.tgz#1f18a4d938152d495965f9c958d923ab2dd669b4"
 
+flow-aws-lambda@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/flow-aws-lambda/-/flow-aws-lambda-1.0.2.tgz#45b8682a28bb1981589e8a1c9a742ef18d3dada4"
+
 flow-bin@^0.66.0:
   version "0.66.0"
   resolved "https://registry.yarnpkg.com/flow-bin/-/flow-bin-0.66.0.tgz#a96dde7015dc3343fd552a7b4963c02be705ca26"

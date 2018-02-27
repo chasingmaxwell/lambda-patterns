@@ -67,9 +67,13 @@ class Handler {
   static get defaultOptions(): {
     shouldProfile: (handler: Handler) => boolean,
     waitForEventLoop: boolean,
+    profileStrategy: string,
+    profilePercentage: number,
     } {
     return {
-      shouldProfile: this.never,
+      shouldProfile: this.shouldProfile,
+      profileStrategy: 'NEVER',
+      profilePercentage: 10,
       waitForEventLoop: true,
     };
   }
@@ -283,6 +287,34 @@ class Handler {
     }
 
     profile.delete();
+  }
+
+  /**
+   * The default shouldProfile implementation.
+   */
+  static shouldProfile(handler: Handler): boolean {
+    let shouldProfile = false;
+    switch (handler.options.profileStrategy) {
+      case 'ALWAYS':
+        shouldProfile = true;
+        break;
+      case 'ALL_COLD_STARTS':
+        shouldProfile = handler.isColdStart;
+        break;
+      case 'ONE_COLD_ONE_WARM':
+        // If we've seen two invocations thus far, we know one of them was cold
+        // and one warm.
+        shouldProfile = profilePercentage.total < 1;
+        break;
+      case 'PERCENTAGE':
+        shouldProfile = profilePercentage * 100 < handler.options.profilePercentage;
+        break;
+      default:
+    }
+
+    profilePercentage.increment(shouldProfile);
+
+    return shouldProfile;
   }
 }
 

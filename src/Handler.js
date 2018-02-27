@@ -19,7 +19,7 @@ class Handler {
   event: any;
   context: Context;
   callback: Callback;
-  isColdStart: ?boolean;
+  isColdStart: boolean;
   profilingEnabled: ?boolean;
   profile: ?string;
   static profiler: ?{
@@ -160,6 +160,8 @@ class Handler {
     this.event = event;
     this.context = context;
     this.callback = callback;
+    this.isColdStart = isColdStart;
+    isColdStart = false;
   }
 
   /**
@@ -186,9 +188,6 @@ class Handler {
    * Perform initialization tasks upon handler invocation.
    */
   init(): void | Promise<void> {
-    this.isColdStart = isColdStart;
-    isColdStart = false;
-
     this.profilingEnabled = this.options.shouldProfile(this);
     this.startProfiling();
 

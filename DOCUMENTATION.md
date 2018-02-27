@@ -21,6 +21,7 @@
   * [never](#never)
   * [defaultOptions](#defaultoptions)
   * [create](#create)
+  * [shouldProfile](#shouldprofile)
 
 <!-- tocstop -->
 
@@ -33,31 +34,35 @@ Provides common functionality for lambda handlers.
 **Parameters**
 
 -   `processor`  
--   `options`   (optional, default `{}`)
+-   `options`  
+-   `event`  
+-   `context`  
+-   `callback`  
 
 ### constructor
 
+-   **See: Handler.create()**
+
 Constructs a handler.
+
+NOTE: Normally handlers should be constructed using the Handler.create() method.
 
 **Parameters**
 
 -   `processor` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A function responsible for processing the handler event.
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing options which modify the behavior of the handler. (optional, default `{}`)
-    -   `options.shouldProfile` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** See Handler.create for detailed description. (optional, default `Handler.never`)
-    -   `options.waitForEventLoop` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** See Handler.create for detailed description. (optional, default `true`)
-
-### invoke
-
-Invoke the handler.
-
-**Parameters**
-
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing options which modify the behavior of the handler.
+      See Handler.create for a more detailed description including options
+      properties.
 -   `event` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The event object passed to the lambda handler.
 -   `context` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The context object passed to the lambda handler.
 -   `callback` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** The callback passed to the lambda handler used to respond to the
       invocation.
 
-Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** 
+### invoke
+
+Invoke the handler.
+
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;void>** A promise of the completed invocation.
 
 ### init
 
@@ -95,15 +100,13 @@ Stop profiling.
 
 A utility method which always returns true.
 
-Returns **any** Boolean
-  Always returns true.
+Returns **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Always returns true.
 
 ### never
 
 A utility method which always returns false.
 
-Returns **any** Boolean
-  Always returns false.
+Returns **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Always returns false.
 
 ### defaultOptions
 
@@ -118,18 +121,37 @@ This can be used when defining the handler like this:
 
 -   `processor` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A function responsible for processing the primary task of the lambda. It
       receives the handler instance as an argument.
--   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing options which modify the behavior of the handler. (optional, default `{}`)
-    -   `options.shouldProfile` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Provide a function which specifies whether profiling data should be
+-   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** An object containing options which modify the behavior of the handler.
+    -   `options.shouldProfile` **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** =Handler.never
+          Provide a function which specifies whether profiling data should be
           collected for the handler invocation. Defaults to Handler.never which
           always returns false.  WARNING: Enabling profiling will impact performance. You should usually
-          not enable this feature on production. (optional, default `Handler.never`)
-    -   `options.waitForEventLoop` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Specify whether the lambda process should be frozen immediately upon
+          not enable this feature on production.
+    -   `options.waitForEventLoop` **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** =true
+          Specify whether the lambda process should be frozen immediately upon
           callback invocation.  WARNING: Changing this option can result in unexpected behavior and bugs
           that are difficult to track down. Only set this to false if you are
           certain there are no application critical tasks being performed
           asynchronously which may not be completed before you invoke the callback.
           For more information:
-          <http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-context.html> (optional, default `true`)
+          <http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-context.html>
+    -   `options.profileStrategy` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** ="NEVER"
+          Specify the profiling strategy if using the default shouldProfile method.
+          Supported strategies:-   ALWAYS
+            Always profile every invocation.
+
+        -   ALL_COLD_STARTS
+            Profile every cold start.
+
+        -   ONE_COLD_ONE_WARM
+            Profile every cold start and one warmed invocation.
+
+        -   PERCENTAGE
+            Profile a percentage of invocations. This requires the percentage
+            configuration property below.
+    -   `options.profilePercentage` **[Number](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Number)** =10
+          If using the "PERCENTAGE" profiling strategy, specify the percentage of
+          invocations which should be profiled.
 
 **Examples**
 
@@ -147,6 +169,17 @@ module.exports = {
 
 Returns **[Function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** A function to be used as a lambda handler which utilizes an instance of
   the Handler class.
+
+### shouldProfile
+
+The default shouldProfile implementation.
+
+**Parameters**
+
+-   `handler` **[Handler](#handler)** The handler instance for which we are determining whether profiling
+      should be enabled.
+
+Returns **[Boolean](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** Whether or not profiling should be enabled.
 
 
 

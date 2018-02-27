@@ -6,9 +6,9 @@
   "author": "Peter Sieg <chasingmaxwell@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "test": "jest --coverage",
+    "test": "yarn build && jest --coverage",
     "lint": "eslint --ignore-path .gitignore .",
-    "emdaer": "emdaer && git add *.md",
+    "emdaer": "yarn build && emdaer && git add *.md",
     "precommit": "yarn lint && yarn emdaer",
     "prepush": "yarn test",
     "commitmsg": "commitlint -e $GIT_PARAMS",

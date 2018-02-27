@@ -5,7 +5,7 @@
 <!--emdaer-p
   - '@emdaer/plugin-documentation'
   - sources:
-    - ./index.js
+    - ./lib/index.js
 -->
 
 <!--emdaer-t

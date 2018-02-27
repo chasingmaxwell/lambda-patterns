@@ -44,7 +44,7 @@ class Handler {
   /**
    * A utility method which always returns true.
    *
-   * @returns
+   * @returns {Boolean}
    *   Always returns true.
    */
   static always() {
@@ -54,7 +54,7 @@ class Handler {
   /**
    * A utility method which always returns false.
    *
-   * @returns
+   * @returns {Boolean}
    *   Always returns false.
    */
   static never() {
@@ -62,7 +62,9 @@ class Handler {
   }
 
   /**
+   * @type {Object}
    * The default options for the constructor.
+   * @static
    */
   static get defaultOptions(): {
     shouldProfile: (handler: Handler) => boolean,
@@ -95,19 +97,19 @@ class Handler {
    *   })),
    * };
    *
-   * @param processor
+   * @param {Function} processor
    *   A function responsible for processing the primary task of the lambda. It
    *   receives the handler instance as an argument.
-   * @param options
+   * @param {Object} options
    *   An object containing options which modify the behavior of the handler.
-   * @param options.shouldProfile=Handler.never
+   * @param {Function} options.shouldProfile=Handler.never
    *   Provide a function which specifies whether profiling data should be
    *   collected for the handler invocation. Defaults to Handler.never which
    *   always returns false.
    *
    *   WARNING: Enabling profiling will impact performance. You should usually
    *   not enable this feature on production.
-   * @param options.waitForEventLoop=true
+   * @param {Boolean} options.waitForEventLoop=true
    *   Specify whether the lambda process should be frozen immediately upon
    *   callback invocation.
    *
@@ -117,8 +119,26 @@ class Handler {
    *   asynchronously which may not be completed before you invoke the callback.
    *   For more information:
    *   http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-context.html
+   * @param {String} options.profileStrategy="NEVER"
+   *   Specify the profiling strategy if using the default shouldProfile method.
+   *   Supported strategies:
+   *   - ALWAYS
+   *     Always profile every invocation.
    *
-   * @returns
+   *   - ALL_COLD_STARTS
+   *     Profile every cold start.
+   *
+   *   - ONE_COLD_ONE_WARM
+   *     Profile every cold start and one warmed invocation.
+   *
+   *   - PERCENTAGE
+   *     Profile a percentage of invocations. This requires the percentage
+   *     configuration property below.
+   * @param {Number} options.profilePercentage=10
+   *   If using the "PERCENTAGE" profiling strategy, specify the percentage of
+   *   invocations which should be profiled.
+   *
+   * @returns {Function}
    *   A function to be used as a lambda handler which utilizes an instance of
    *   the Handler class.
    *
@@ -142,19 +162,17 @@ class Handler {
    *
    * @see Handler.create()
    *
-   * @param processor
+   * @param {Function} processor
    *   A function responsible for processing the handler event.
-   * @param options
+   * @param {Object} options
    *   An object containing options which modify the behavior of the handler.
-   * @param options.shouldProfile=Handler.never
-   *   See Handler.create for detailed description.
-   * @param options.waitForEventLoop=true
-   *   See Handler.create for detailed description.
-   * @param event
+   *   See Handler.create for a more detailed description including options
+   *   properties.
+   * @param {Object} event
    *   The event object passed to the lambda handler.
-   * @param context
+   * @param {Object} context
    *   The context object passed to the lambda handler.
-   * @param callback
+   * @param {Function} callback
    *   The callback passed to the lambda handler used to respond to the
    *   invocation.
    */
@@ -187,7 +205,7 @@ class Handler {
   /**
    * Invoke the handler.
    *
-   * @returns
+   * @returns {Promise<void>}
    *   A promise of the completed invocation.
    */
   invoke(): Promise<void> {
@@ -238,9 +256,9 @@ class Handler {
   /**
    * Handle the response.
    *
-   * @param error
+   * @param {Error} error
    *   The error passed from the handler process.
-   * @param response
+   * @param {*} response
    *   The response from the handler process.
    */
   respond(error: ?Error, response: any): void | Promise<void> {
@@ -291,6 +309,13 @@ class Handler {
 
   /**
    * The default shouldProfile implementation.
+   *
+   * @param {Handler} handler
+   *   The handler instance for which we are determining whether profiling
+   *   should be enabled.
+   *
+   * @returns {Boolean}
+   *   Whether or not profiling should be enabled.
    */
   static shouldProfile(handler: Handler): boolean {
     let shouldProfile = false;

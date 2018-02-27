@@ -43,6 +43,7 @@
     "semantic-release-conventional-commits": "^1.2.0"
   },
   "dependencies": {
+    "percentage-incrementor": "^1.0.0",
     "v8-profiler-lambda": "iopipe/v8-profiler-lambda"
   },
   "jest": {

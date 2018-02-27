@@ -8,6 +8,10 @@ import typeof {
   deflateSync,
 } from 'zlib';
 
+const PercentageIncrementor = require('percentage-incrementor');
+
+const coldStartPercentage = new PercentageIncrementor(isColdStart => !!isColdStart);
+const profilePercentage = new PercentageIncrementor(isProfiling => !!isProfiling);
 let isColdStart = true;
 
 /**
@@ -20,6 +24,10 @@ class Handler {
   context: Context;
   callback: Callback;
   isColdStart: boolean;
+  container: {
+    coldStartPercentage: PercentageIncrementor;
+    profilePercentage: PercentageIncrementor;
+  }
   profilingEnabled: ?boolean;
   profile: ?string;
   static profiler: ?{
@@ -56,7 +64,10 @@ class Handler {
   /**
    * The default options for the constructor.
    */
-  static get defaultOptions(): { shouldProfile: () => boolean, waitForEventLoop: boolean } {
+  static get defaultOptions(): {
+    shouldProfile: (handler: Handler) => boolean,
+    waitForEventLoop: boolean,
+    } {
     return {
       shouldProfile: this.never,
       waitForEventLoop: true,
@@ -162,6 +173,11 @@ class Handler {
     this.callback = callback;
     this.isColdStart = isColdStart;
     isColdStart = false;
+    this.container = {
+      coldStartPercentage,
+      profilePercentage,
+    };
+    coldStartPercentage.increment(this.isColdStart);
   }
 
   /**

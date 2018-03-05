@@ -231,6 +231,7 @@ class Handler {
    */
   init(): void | Promise<void> {
     this.profilingEnabled = this.options.shouldProfile(this);
+    profilePercentage.increment(this.profilingEnabled);
     this.startProfiling();
 
     if (this.options.waitForEventLoop === false) {
@@ -340,8 +341,6 @@ class Handler {
         break;
       default:
     }
-
-    profilePercentage.increment(shouldProfile);
 
     return shouldProfile;
   }

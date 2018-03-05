@@ -25,9 +25,10 @@ class Handler {
   callback: Callback;
   isColdStart: boolean;
   container: {
-    coldStartPercentage: PercentageIncrementor;
-    profilePercentage: PercentageIncrementor;
-  }
+    coldStartPercentage: PercentageIncrementor,
+    profilePercentage: PercentageIncrementor,
+    totalInvocations: number,
+  };
   profilingEnabled: ?boolean;
   profile: ?string;
   static profiler: ?{
@@ -195,11 +196,14 @@ class Handler {
     this.callback = callback;
     this.isColdStart = isColdStart;
     isColdStart = false;
+
+    coldStartPercentage.increment(this.isColdStart);
+
     this.container = {
       coldStartPercentage,
       profilePercentage,
+      totalInvocations: coldStartPercentage.total,
     };
-    coldStartPercentage.increment(this.isColdStart);
   }
 
   /**
@@ -211,15 +215,21 @@ class Handler {
   invoke(): Promise<void> {
     return Promise.resolve()
       .then(() => this.init())
-      .then(() => this.process())
-      .then(res => Promise.resolve()
-        .then(() => this.cleanup())
-        .then(() => this.respond(null, res))
-        .catch(err => this.respond(err)))
+      .then(() => {
+        const res = this.process();
+        return Promise.resolve()
+          .then(() => this.cleanup())
+          .then(() => res);
+      })
+      .then(res => this.respond(null, res))
       .catch(error => Promise.resolve()
-        .then(() => this.cleanup())
         .then(() => this.respond(error))
-        .catch(err => this.respond(err)));
+        // This is here to handle additional errors generated while trying to
+        // respond to an already unsuccessful request.
+        .catch(err => this.respond(err))
+        // This is an overly cautious best-effort measure to try to pass an
+        // error back to the lambda API when the respond method is throwing.
+        .catch(err => this.callback(err)));
   }
 
   /**
@@ -227,6 +237,7 @@ class Handler {
    */
   init(): void | Promise<void> {
     this.profilingEnabled = this.options.shouldProfile(this);
+    profilePercentage.increment(this.profilingEnabled);
     this.startProfiling();
 
     if (this.options.waitForEventLoop === false) {
@@ -329,15 +340,13 @@ class Handler {
       case 'ONE_COLD_ONE_WARM':
         // If we've seen two invocations thus far, we know one of them was cold
         // and one warm.
-        shouldProfile = profilePercentage.total < 1;
+        shouldProfile = handler.container.totalInvocations < 3;
         break;
       case 'PERCENTAGE':
         shouldProfile = profilePercentage * 100 < handler.options.profilePercentage;
         break;
       default:
     }
-
-    profilePercentage.increment(shouldProfile);
 
     return shouldProfile;
   }

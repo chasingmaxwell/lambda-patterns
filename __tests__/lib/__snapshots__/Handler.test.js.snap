@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Handler defaultOptions are defined 1`] = `
+Object {
+  "profilePercentage": 10,
+  "profileStrategy": "NEVER",
+  "shouldProfile": [Function],
+  "waitForEventLoop": true,
+}
+`;

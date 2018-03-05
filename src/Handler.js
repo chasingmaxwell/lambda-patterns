@@ -215,15 +215,21 @@ class Handler {
   invoke(): Promise<void> {
     return Promise.resolve()
       .then(() => this.init())
-      .then(() => this.process())
-      .then(res => Promise.resolve()
-        .then(() => this.cleanup())
-        .then(() => this.respond(null, res))
-        .catch(err => this.respond(err)))
+      .then(() => {
+        const res = this.process();
+        return Promise.resolve()
+          .then(() => this.cleanup())
+          .then(() => res);
+      })
+      .then(res => this.respond(null, res))
       .catch(error => Promise.resolve()
-        .then(() => this.cleanup())
         .then(() => this.respond(error))
-        .catch(err => this.respond(err)));
+        // This is here to handle additional errors generated while trying to
+        // respond to an already unsuccessful request.
+        .catch(err => this.respond(err))
+        // This is an overly cautious best-effort measure to try to pass an
+        // error back to the lambda API when the respond method is throwing.
+        .catch(err => this.callback(err)));
   }
 
   /**

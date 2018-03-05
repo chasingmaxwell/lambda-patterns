@@ -334,7 +334,7 @@ class Handler {
       case 'ONE_COLD_ONE_WARM':
         // If we've seen two invocations thus far, we know one of them was cold
         // and one warm.
-        shouldProfile = profilePercentage.total < 1;
+        shouldProfile = handler.container.totalInvocations < 3;
         break;
       case 'PERCENTAGE':
         shouldProfile = profilePercentage * 100 < handler.options.profilePercentage;

@@ -25,9 +25,10 @@ class Handler {
   callback: Callback;
   isColdStart: boolean;
   container: {
-    coldStartPercentage: PercentageIncrementor;
-    profilePercentage: PercentageIncrementor;
-  }
+    coldStartPercentage: PercentageIncrementor,
+    profilePercentage: PercentageIncrementor,
+    totalInvocations: number,
+  };
   profilingEnabled: ?boolean;
   profile: ?string;
   static profiler: ?{
@@ -195,11 +196,14 @@ class Handler {
     this.callback = callback;
     this.isColdStart = isColdStart;
     isColdStart = false;
+
+    coldStartPercentage.increment(this.isColdStart);
+
     this.container = {
       coldStartPercentage,
       profilePercentage,
+      totalInvocations: coldStartPercentage.total,
     };
-    coldStartPercentage.increment(this.isColdStart);
   }
 
   /**

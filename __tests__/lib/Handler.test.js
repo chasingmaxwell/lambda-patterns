@@ -99,6 +99,31 @@ describe('Handler', () => {
         });
     });
 
+    it('does not invoke cleanup() until after process() has completed', () => {
+      expect.assertions(1);
+      mocks.push(jest.spyOn(Handler.prototype, 'cleanup'));
+      processor = () => new Promise((resolve) => {
+        process.nextTick(() => {
+          expect(Handler.prototype.cleanup).not.toHaveBeenCalled();
+          resolve();
+        });
+      });
+      const handler = new Handler(processor, options, event, context, callback);
+      return handler.invoke();
+    });
+
+    it('still calls cleanup() if process() fails', () => {
+      mocks.push(jest.spyOn(Handler.prototype, 'cleanup'));
+      processor = () => {
+        throw new Error('FAIL');
+      };
+      const handler = new Handler(processor, options, event, context, callback);
+      return handler.invoke()
+        .then(() => {
+          expect(Handler.prototype.cleanup).toHaveBeenCalled();
+        });
+    });
+
     it('sends the result of process() to respond()', () => {
       expect.assertions(1);
       const response = { iAm: 'a response' };

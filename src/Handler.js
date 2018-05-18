@@ -216,9 +216,11 @@ class Handler {
     return Promise.resolve()
       .then(() => this.init())
       .then(() => this.process())
-      .then(res => Promise.resolve(this.cleanup())
+      .then(res => Promise.resolve()
+        .then(() => this.cleanup())
         .then(() => this.respond(null, res)))
-      .catch(error => Promise.resolve(this.cleanup())
+      .catch(error => Promise.resolve()
+        .then(() => this.cleanup())
         .then(() => this.respond(error))
         // This is here to handle additional errors generated while trying to
         // respond to an already unsuccessful request.

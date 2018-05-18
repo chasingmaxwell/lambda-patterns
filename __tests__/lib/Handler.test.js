@@ -124,6 +124,21 @@ describe('Handler', () => {
         });
     });
 
+    it('if cleanup throws, the error is passed to respond', () => {
+      const error = new Error('FAIL');
+      mocks.push(
+        jest.spyOn(Handler.prototype, 'respond'),
+        jest.spyOn(Handler.prototype, 'cleanup').mockImplementation(() => {
+          throw error;
+        })
+      );
+      const handler = new Handler(processor, options, event, context, callback);
+      return handler.invoke()
+        .then(() => {
+          expect(Handler.prototype.respond).toHaveBeenCalledWith(error);
+        });
+    });
+
     it('sends the result of process() to respond()', () => {
       expect.assertions(1);
       const response = { iAm: 'a response' };

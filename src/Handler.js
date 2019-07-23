@@ -341,7 +341,8 @@ class Handler {
         shouldProfile = handler.container.totalInvocations < 3;
         break;
       case 'PERCENTAGE':
-        shouldProfile = profilePercentage * 100 < handler.options.profilePercentage;
+        shouldProfile = parseFloat(profilePercentage.valueOf()) * 100
+          < handler.options.profilePercentage;
         break;
       default:
     }
